@@ -23,7 +23,6 @@
     "grammy-edit-or-reply": "^1.2.0",
     "grammy-tg-components": "^0.0.2",
     "hono": "^4.5.3",
-    "nodemon": "^3.1.4",
     "pino": "^9.3.2",
     "pino-pretty": "^11.2.2",
     "tsx": "^4.19.0",
