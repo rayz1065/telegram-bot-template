@@ -3,15 +3,16 @@ import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { Bot, webhookCallback } from 'grammy';
 import { MyContext } from '../context.js';
-import { appConfig } from '../config.js';
+import { AppConfig } from '../config.js';
 import { Logger } from '../logger.js';
 
 type Dependencies = {
   bot: Bot<MyContext>;
   logger: Logger;
+  config: AppConfig;
 };
 
-export function startServer({ bot, logger }: Dependencies) {
+export function startServer({ bot, logger, config }: Dependencies) {
   const app = new Hono();
 
   const port = 3000;
@@ -26,7 +27,7 @@ export function startServer({ bot, logger }: Dependencies) {
     });
   });
 
-  if (appConfig.USE_WEBHOOK) {
+  if (config.USE_WEBHOOK) {
     app.post('/webhook', async (c) => {
       try {
         await c.req.json();
@@ -34,7 +35,7 @@ export function startServer({ bot, logger }: Dependencies) {
         return c.json({ ok: false, error: 'Invalid body' }, 400);
       }
       return await webhookCallback(bot, 'hono', {
-        secretToken: appConfig.WEBHOOK_SECRET,
+        secretToken: config.WEBHOOK_SECRET,
       })(c);
     });
   }

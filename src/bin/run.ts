@@ -14,7 +14,7 @@ async function main() {
     prisma,
   });
 
-  const { server } = startServer({ bot, logger });
+  const { server } = startServer({ bot, logger, config: appConfig });
 
   onShutdown(async () => {
     logger.info('Shutting down');
