@@ -4,9 +4,15 @@ import { buildBot } from '../main.js';
 import '../dayjs.js';
 import { startServer } from '../server/index.js';
 import { logger } from '../logger.js';
+import { i18n } from '../i18n.js';
 
 async function main() {
-  const bot = buildBot();
+  const bot = buildBot({
+    config: appConfig,
+    i18n,
+    logger,
+    prisma,
+  });
 
   const { server } = startServer({ bot, logger });
 
@@ -19,8 +25,12 @@ async function main() {
     ]);
 
     await prisma.$disconnect();
+
     process.exit(0);
   });
+
+  await bot.init();
+  logger.info(`Starting ${bot.botInfo.username}`);
 
   if (!appConfig.USE_WEBHOOK) {
     logger.info('Bot running in polling mode...');
